@@ -1,0 +1,18 @@
+{
+    "Apple":{
+        "Macros":{
+            "Carbs": 4,
+            "Fats": 0,
+            "Protien": 0
+        },
+        "ServingSize": 26
+    },
+    "DietDrPepper":{
+        "Macros":{
+            "Carbs":0,
+            "Fats":0,
+            "Protien":0
+        },
+        "ServingSize":340
+    }
+}
