@@ -1,15 +1,16 @@
-package FoodItem;
 import java.util.ArrayList;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+import org.json.JSONException;
 
 /***************
  * Class to create an instance of a single serving of food.
- * Constructor takes parameters for name and each macro (carbs, fats, and protiens)
  ***************/
 public class FoodItem {
 
     private String name;
-    ArrayList<Integer> macros = new ArrayList<Integer>();
-
+    private ArrayList<Integer> macros = new ArrayList<Integer>();
+    private JSONObject JSONconversion = new JSONObject();
     // Constructor
     public FoodItem(String foodName, int carbs, int fats, int protien){
         this.name = foodName;
@@ -17,6 +18,27 @@ public class FoodItem {
         this.macros.add(fats);
         this.macros.add(protien);
         return;
+    }
+
+    public String toJSON(){
+        JSONStringer foodString = new JSONStringer();
+        String jsonText;
+        try {
+            jsonText = foodString
+            .object()
+            .key(this.name)
+            .array()
+            .value(this.macros.get(0))
+            .value(this.macros.get(1))
+            .value(this.macros.get(3))
+            .endArray()
+            .endObject()
+            .toString();
+        } catch (JSONException e) {
+            String fail = "Failed to convert to string";
+            return fail;
+        }
+        return jsonText;
     }
 
     public void print() {

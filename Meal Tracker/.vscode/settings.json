@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "Meal Tracker App/lib/java-json.jar"
+    ]
+}

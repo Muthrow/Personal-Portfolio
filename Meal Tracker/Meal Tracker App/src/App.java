@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 // import java.io.File;
 // import java.io.IOException;
 // import FoodItem.FoodItem;
@@ -6,6 +7,7 @@ import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) throws Exception{
+
         Boolean end = false;
         Scanner input = new Scanner(System.in);
         while(!end){
@@ -15,7 +17,6 @@ public class App {
             switch(choice) {
                 case 1:
                     // new day
-                    // 
                     System.out.println("New Day");
                     break;
                 case 2:
@@ -42,3 +43,57 @@ public class App {
     }
 }
 
+/***************
+ * Class to create an instance of a single serving of food.
+ ***************/
+public class FoodItem {
+
+    private String name;
+    ArrayList<Integer> macros = new ArrayList<Integer>();
+
+    // Constructor
+    public FoodItem(String foodName, int carbs, int fats, int protien){
+        this.name = foodName;
+        this.macros.add(carbs);
+        this.macros.add(fats);
+        this.macros.add(protien);
+        return;
+    }
+
+    public void print() {
+        // print info to the user.
+        return;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public int getGramsCarbs(){
+        return macros.get(0);
+    }
+
+    public int getGramsFats(){
+        return macros.get(1);
+    }
+
+    public int getGramsProtien(){
+        return macros.get(2);
+    }
+
+    public int getCaloriesCarbs(){
+        return (getCaloriesCarbs() * 4);
+    }
+
+    public int getCaloriesFats(){
+        return (getCaloriesFats() * 9);
+    }
+
+    public int getCaloriesProtien(){
+        return (getCaloriesProtien() * 4);
+    }
+
+    public int getCaloriesTotal(){
+        return (getCaloriesCarbs() + getCaloriesFats() + getCaloriesProtien());
+    }
+}
