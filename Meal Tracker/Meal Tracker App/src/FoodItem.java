@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import org.json.JSONObject;
 import org.json.JSONStringer;
 import org.json.JSONException;
 
@@ -10,7 +9,6 @@ public class FoodItem {
 
     private String name;
     private ArrayList<Integer> macros = new ArrayList<Integer>();
-    private JSONObject JSONconversion = new JSONObject();
     // Constructor
     public FoodItem(String foodName, int carbs, int fats, int protien){
         this.name = foodName;
@@ -20,6 +18,7 @@ public class FoodItem {
         return;
     }
 
+    // Use the JSONStringer object to place our data into a string with JSON syntax
     public String toJSON(){
         JSONStringer foodString = new JSONStringer();
         String jsonText;
