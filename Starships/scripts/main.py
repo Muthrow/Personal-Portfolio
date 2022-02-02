@@ -10,5 +10,19 @@ class Game(arc.Window):
     def __init__(self, width, height, title, resize):
         super().__init__(width, height, title, resize)
 
+    def setup(self):
+        # setup sprites and sprite lists
+        pass
+
+    def on_draw(self):
+        self.clear()
+        # call draw on sprite lists
+        pass
+
+    def on_update(self, delta_time: float):
+        # game logic
+        # call update on sprite lists
+        pass
+
 
 myGame = Game(600,800,"Your Mom",False)
