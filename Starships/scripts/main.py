@@ -3,32 +3,44 @@ from ctypes import resize
 from msilib.schema import Class
 from operator import le
 from pydoc import cli
-from turtle import color
+from turtle import color, position
 from unittest import runner
 import arcade as arc
 import click
 from matplotlib.pyplot import cla, draw
 from sqlalchemy import false
+from asteroid import Asteroid
 from ship import Ship
 from faction import Faction
+import random
 
 SCREEN_WIDTH = 700
-SCREEN_HEIGHT = 700
+SCREEN_HEIGHT = 900
+
 SCREEN_TITLE = "Starships"
 TILE_SCALING = .225
 PLAYER_SCALE = .1
 PLAYER_SPRITE = "assets\sprites\Faction2\cargoship.png"
-MUSIC = "assets\sounds\music\Lord of The Rings (Calm Ambient Mix).mp3"
-
+MUSIC = "assets\sounds\music\I know your secret.mp3"
+# MUSIC = "assets\sounds\music\Lord of The Rings (Calm Ambient Mix).mp3"
+# MUSIC = "assets\sounds\music\\17 The Maw.mp3"
+# FACTION = 2
+ASTEROID_COUNT = 30
+SPAWN_BUFFER = 30
+TEAM_COUNT = 3
 
 class Game(arc.Window):
     """ Main class for the application. """
 
     def __init__(self, width, height, title, resize):
         super().__init__(width, height, title, resize)
+
+# Initialize lists
         self.background_color = arc.color.BLACK
         self.player1_list = arc.SpriteList()
         self.player2_list = arc.SpriteList()
+        self.player3_list = arc.SpriteList()
+        self.player4_list = arc.SpriteList()
         self.bullet_list = arc.SpriteList()
         self.physics_engine = None
         self.space_list = arc.SpriteList()
@@ -36,12 +48,12 @@ class Game(arc.Window):
         self.scene = None
         self.background_list = arc.SpriteList()
         self.asteriod_list = arc.SpriteList()
-        # self.asteriod_object_list = None
         self.player = None
         self.select = False
         self.selected_list = arc.SpriteList()
         self.music = None
         self.player = None
+        self.faction_list = list()
 
     def setup(self):
         # setup sprites and sprite lists
@@ -55,27 +67,56 @@ class Game(arc.Window):
         }
         self.basic_map = arc.tilemap.read_tmx(map_name)
         self.background_list = arc.tilemap.process_layer(self.basic_map,"Background",TILE_SCALING)
-        self.asteriod_list = arc.tilemap.process_layer(self.basic_map, "Asteriod-sprite", TILE_SCALING, use_spatial_hash=True)
+
+# Setup Asteroids
+        # self.asteriod_list = arc.tilemap.process_layer(self.basic_map, "Asteriod-sprite", TILE_SCALING, use_spatial_hash=True)
+        for each in range(ASTEROID_COUNT):
+            spawn = (random.randint(SPAWN_BUFFER,SCREEN_WIDTH-SPAWN_BUFFER),random.randint(SPAWN_BUFFER,SCREEN_WIDTH-SPAWN_BUFFER))
+            self.asteriod_list.append(Asteroid(position=spawn))
         # self.asteriod_object_list = arc.tilemap.process_layer(self.basic_map, "Asteriods", TILE_SCALING, use_spatial_hash=True)
 
-        team1 = Faction(1,1)
+# Setup Teams
+# Team 1
+        team1 = Faction(1,4)
         self.player1_list = team1.getShips()
-        for ship in team1.getShips():
-            print(ship.speed)
+        self.faction_list.append(team1)
+# Team 2
+        team2 = Faction(4,2)
+        self.player2_list = team2.getShips()
+        self.faction_list.append(team2)
+# Team 3
+        if TEAM_COUNT >= 3:
+            team3 = Faction(2,3)
+            self.player3_list = team3.getShips()
+            self.faction_list.append(team3)
+# Team 4
+        if TEAM_COUNT >= 4:
+            team4 = Faction(3,4)
+            self.player4_list = team4.getShips()
+            self.faction_list.append(team4)
+
+        # for ship in team1.getShips():
+            # print(ship.speed)
         # self.player = self.player1_list[0]
         self.selected_list = arc.SpriteList()
         # setup basic player
         # Setup Physics
         # self.physics_engine = arc.PhysicsEngineSimple(self.player, self.asteriod_list)
 
+# Music
         self.music = arc.load_sound(MUSIC)
-        self.player = self.music.play()
+        # self.player = self.music.play()
 
     def on_draw(self):
+        """ Draw Sprites """
+# Clear the board before we draw again
         self.clear()
         self.background_list.draw()
-        # call draw on sprite lists
+# call draw on sprite lists
         self.player1_list.draw()
+        self.player2_list.draw()
+        self.player3_list.draw()
+        self.player4_list.draw()
         # self.asteriod_object_list.draw()
         self.asteriod_list.draw()
         # self.asteriod_list.draw_hit_boxes(color=arc.color.WHITE)
@@ -85,13 +126,25 @@ class Game(arc.Window):
         self.bullet_list.draw()
 
     def on_update(self, delta_time: float):
-        # game logic
-        # call update on sprite lists
+        """ Game Logic. Updated Every Frame """
+
+# call update on sprite lists
         self.background_list.update()
         # self.physics_engine.update()
         self.player1_list.update()
+        self.player2_list.update()
+        self.player3_list.update()
+        self.player4_list.update()
         self.asteriod_list.update()
         self.bullet_list.update()
+        for bullet in self.bullet_list:
+            hit_list = arc.check_for_collision_with_list(bullet, self.asteriod_list)
+            for faction in self.faction_list:
+                hit_list.extend(arc.check_for_collision_with_list(bullet, faction.getShips()))
+            if len(hit_list) > 0:
+                bullet.kill()
+            for entity in hit_list:
+                entity.hp -= bullet.damage
 
     def on_key_press(self, key, modifiers):
         """
