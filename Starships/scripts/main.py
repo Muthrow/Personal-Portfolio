@@ -1,12 +1,8 @@
 """ Main Game Logic and Game Runner """
 from ctypes import resize
-from msilib.schema import Class
-from operator import le
-from pydoc import cli
 from turtle import color, position
 from unittest import runner
 import arcade as arc
-import click
 from matplotlib.pyplot import cla, draw
 from sqlalchemy import false
 from asteroid import Asteroid
@@ -14,20 +10,21 @@ from ship import Ship
 from faction import Faction
 import random
 
-SCREEN_WIDTH = 700
-SCREEN_HEIGHT = 900
+GAME_WIDTH = 700
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 700
 
 SCREEN_TITLE = "Starships"
 TILE_SCALING = .225
 PLAYER_SCALE = .1
-PLAYER_SPRITE = "assets\sprites\Faction2\cargoship.png"
+PLAYER_SPRITE = "assets\sprites\Faction2\cruiser.png"
 MUSIC = "assets\sounds\music\I know your secret.mp3"
 # MUSIC = "assets\sounds\music\Lord of The Rings (Calm Ambient Mix).mp3"
 # MUSIC = "assets\sounds\music\\17 The Maw.mp3"
 # FACTION = 2
 ASTEROID_COUNT = 30
 SPAWN_BUFFER = 30
-TEAM_COUNT = 3
+TEAM_COUNT = 2
 
 class Game(arc.Window):
     """ Main class for the application. """
@@ -54,6 +51,8 @@ class Game(arc.Window):
         self.music = None
         self.player = None
         self.faction_list = list()
+        self.turn = 1
+        self.team_cnt = TEAM_COUNT
 
     def setup(self):
         # setup sprites and sprite lists
@@ -71,7 +70,7 @@ class Game(arc.Window):
 # Setup Asteroids
         # self.asteriod_list = arc.tilemap.process_layer(self.basic_map, "Asteriod-sprite", TILE_SCALING, use_spatial_hash=True)
         for each in range(ASTEROID_COUNT):
-            spawn = (random.randint(SPAWN_BUFFER,SCREEN_WIDTH-SPAWN_BUFFER),random.randint(SPAWN_BUFFER,SCREEN_WIDTH-SPAWN_BUFFER))
+            spawn = (random.randint(SPAWN_BUFFER,GAME_WIDTH-SPAWN_BUFFER),random.randint(SPAWN_BUFFER,SCREEN_WIDTH-SPAWN_BUFFER))
             self.asteriod_list.append(Asteroid(position=spawn))
         # self.asteriod_object_list = arc.tilemap.process_layer(self.basic_map, "Asteriods", TILE_SCALING, use_spatial_hash=True)
 
@@ -85,13 +84,13 @@ class Game(arc.Window):
         self.player2_list = team2.getShips()
         self.faction_list.append(team2)
 # Team 3
-        if TEAM_COUNT >= 3:
+        if self.team_cnt >= 3:
             team3 = Faction(2,3)
             self.player3_list = team3.getShips()
             self.faction_list.append(team3)
 # Team 4
-        if TEAM_COUNT >= 4:
-            team4 = Faction(3,4)
+        if self.team_cnt >= 4:
+            team4 = Faction(3,1)
             self.player4_list = team4.getShips()
             self.faction_list.append(team4)
 
@@ -141,6 +140,8 @@ class Game(arc.Window):
             hit_list = arc.check_for_collision_with_list(bullet, self.asteriod_list)
             for faction in self.faction_list:
                 hit_list.extend(arc.check_for_collision_with_list(bullet, faction.getShips()))
+            if self.selected_list[0] in hit_list:
+                hit_list.remove(self.selected_list[0])
             if len(hit_list) > 0:
                 bullet.kill()
             for entity in hit_list:
@@ -179,9 +180,9 @@ class Game(arc.Window):
                     if len(self.selected_list) > 0:
                         self.selected_list.pop()
                     self.selected_list.append(click_list.pop())
-                elif len(click_list) == 0:
-                    if len(self.selected_list) > 0:
-                        self.selected_list.pop()
+                # elif len(click_list) == 0:
+                #     if len(self.selected_list) > 0:
+                #         self.selected_list.pop()
 
 
 def main():

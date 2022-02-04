@@ -4,10 +4,10 @@ import arcade as arc
 from ship import Capital, Fighter, Ship
 
 SCREEN_WIDTH = 700
-SCREEN_HEIGHT = 900
+SCREEN_HEIGHT = 700
 FIGHTER_SCALING = .15
 CAPITAL_SCALING = .25
-SPAWN_GAP = 50
+SPAWN_GAP = 75
 
 
 class Faction():
@@ -71,7 +71,7 @@ class Faction():
         if side == 2:
             spawn_agg_x = SCREEN_WIDTH-SPAWN_GAP
             spawn_agg_y = SCREEN_WIDTH/2
-            self.spawns = [(spawn_agg_x,spawn_agg_y),(spawn_agg_x-SPAWN_GAP,spawn_agg_y),(spawn_agg_x,spawn_agg_y+SPAWN_GAP),(spawn_agg_x+SPAWN_GAP,spawn_agg_y)]
+            self.spawns = [(spawn_agg_x,spawn_agg_y),(spawn_agg_x,spawn_agg_y+SPAWN_GAP),(spawn_agg_x-SPAWN_GAP,spawn_agg_y),(spawn_agg_x,spawn_agg_y-SPAWN_GAP)]
         if side == 3:
             spawn_agg_x = SCREEN_WIDTH/2
             spawn_agg_y = SCREEN_WIDTH-SPAWN_GAP
@@ -79,14 +79,14 @@ class Faction():
         if side == 4:
             spawn_agg_x = SPAWN_GAP
             spawn_agg_y = SCREEN_WIDTH/2
-            self.spawns = [(spawn_agg_x,spawn_agg_y),(spawn_agg_x-SPAWN_GAP,spawn_agg_y),(spawn_agg_x,spawn_agg_y+SPAWN_GAP),(spawn_agg_x+SPAWN_GAP,spawn_agg_y)]
+            self.spawns = [(spawn_agg_x,spawn_agg_y),(spawn_agg_x,spawn_agg_y+SPAWN_GAP),(spawn_agg_x,spawn_agg_y-SPAWN_GAP),(spawn_agg_x+SPAWN_GAP,spawn_agg_y)]
 
 
 
 
-        self.ships.append(Capital(style, capital_sprite, scale=self.capital_scale, flipped_vertically=flip_x, flipped_horizontally=flip_y, flipped_diagonally=flip_diag, center_x=self.spawns[0][0], center_y=self.spawns[0][1], laser_name=laser_sprite))
+        self.ships.append(Capital(style, capital_sprite, scale=self.capital_scale, flipped_vertically=flip_x, flipped_horizontally=flip_y, flipped_diagonally=flip_diag, center_x=self.spawns[0][0], center_y=self.spawns[0][1]))
         for i in range(3):
-            self.ships.append(Fighter(style, fighter_sprite, scale=self.fighter_scale, flipped_vertically=flip_x, flipped_horizontally=flip_y, flipped_diagonally=flip_diag, center_x=i*50+self.spawns[i+1][0]-50, center_y=self.spawns[i+1][1]-50, laser_name=laser_sprite))
+            self.ships.append(Fighter(style, fighter_sprite, scale=self.fighter_scale, flipped_vertically=flip_x, flipped_horizontally=flip_y, flipped_diagonally=flip_diag, center_x=self.spawns[i+1][0], center_y=self.spawns[i+1][1]))
 
     def getShips(self):
         return self.ships
