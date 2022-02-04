@@ -59,7 +59,7 @@ class Ship(arc.Sprite):
         """ Fires a shot in the direction of the destination """
         print('pew pew')
         arc.play_sound(self.pew)
-        laser = Bullet(self.laser_file, scale=.1)
+        laser = Bullet(self.laser_file, origin=self, scale=.1)
         laser.position = self.position
         angle_x = target_x - laser.center_x
         angle_y = target_y - laser.center_y

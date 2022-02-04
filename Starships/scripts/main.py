@@ -1,7 +1,6 @@
 """ Main Game Logic and Game Runner """
 from ctypes import resize
 from turtle import color, position
-from unittest import runner
 import arcade as arc
 from matplotlib.pyplot import cla, draw
 from sqlalchemy import false
@@ -24,7 +23,8 @@ MUSIC = "assets\sounds\music\I know your secret.mp3"
 # FACTION = 2
 ASTEROID_COUNT = 30
 SPAWN_BUFFER = 30
-TEAM_COUNT = 2
+TEAM_COUNT = 4
+ACTION_CNT = 3
 
 class Game(arc.Window):
     """ Main class for the application. """
@@ -51,32 +51,22 @@ class Game(arc.Window):
         self.music = None
         self.player = None
         self.faction_list = list()
-        self.turn = 1
+        self.turn = 0
         self.team_cnt = TEAM_COUNT
+        self.active_team = None
 
     def setup(self):
-        # setup sprites and sprite lists
-
-        # Setup Map
+        """ setup sprites and sprite lists """
+# Setup Map
         map_name = "assets\Starship test.tmx"
-        layer_options = {
-            "Platforms": {
-                "use_spatial_hash": True,
-            },
-        }
         self.basic_map = arc.tilemap.read_tmx(map_name)
         self.background_list = arc.tilemap.process_layer(self.basic_map,"Background",TILE_SCALING)
 
-# Setup Asteroids
-        # self.asteriod_list = arc.tilemap.process_layer(self.basic_map, "Asteriod-sprite", TILE_SCALING, use_spatial_hash=True)
-        for each in range(ASTEROID_COUNT):
-            spawn = (random.randint(SPAWN_BUFFER,GAME_WIDTH-SPAWN_BUFFER),random.randint(SPAWN_BUFFER,SCREEN_WIDTH-SPAWN_BUFFER))
-            self.asteriod_list.append(Asteroid(position=spawn))
-        # self.asteriod_object_list = arc.tilemap.process_layer(self.basic_map, "Asteriods", TILE_SCALING, use_spatial_hash=True)
 
 # Setup Teams
-# Team 1
+# Team 1 (Gets first turn)
         team1 = Faction(1,4)
+        self.active_team = team1
         self.player1_list = team1.getShips()
         self.faction_list.append(team1)
 # Team 2
@@ -94,13 +84,14 @@ class Game(arc.Window):
             self.player4_list = team4.getShips()
             self.faction_list.append(team4)
 
-        # for ship in team1.getShips():
-            # print(ship.speed)
-        # self.player = self.player1_list[0]
         self.selected_list = arc.SpriteList()
-        # setup basic player
-        # Setup Physics
-        # self.physics_engine = arc.PhysicsEngineSimple(self.player, self.asteriod_list)
+
+# Setup Asteroids
+        for each in range(ASTEROID_COUNT):
+            spawn = (random.randint(SPAWN_BUFFER,GAME_WIDTH-SPAWN_BUFFER),random.randint(SPAWN_BUFFER,SCREEN_WIDTH-SPAWN_BUFFER))
+            if len(arc.get_sprites_at_point(spawn)) > 0:
+                each -=1
+            self.asteriod_list.append(Asteroid(position=spawn))
 
 # Music
         self.music = arc.load_sound(MUSIC)
@@ -116,11 +107,9 @@ class Game(arc.Window):
         self.player2_list.draw()
         self.player3_list.draw()
         self.player4_list.draw()
-        # self.asteriod_object_list.draw()
         self.asteriod_list.draw()
-        # self.asteriod_list.draw_hit_boxes(color=arc.color.WHITE)
         if self.select == True:
-            self.player1_list.draw_hit_boxes(color=arc.color.WHITE)
+            self.active_team.getShips().draw_hit_boxes(color=arc.color.WHITE)
         self.selected_list.draw_hit_boxes(color=arc.color.WHITE)
         self.bullet_list.draw()
 
@@ -129,23 +118,36 @@ class Game(arc.Window):
 
 # call update on sprite lists
         self.background_list.update()
-        # self.physics_engine.update()
         self.player1_list.update()
         self.player2_list.update()
         self.player3_list.update()
         self.player4_list.update()
         self.asteriod_list.update()
+# Bullet logic
         self.bullet_list.update()
         for bullet in self.bullet_list:
+# Check for collision with asteroids
             hit_list = arc.check_for_collision_with_list(bullet, self.asteriod_list)
+# Check for collision with ALL ships
             for faction in self.faction_list:
                 hit_list.extend(arc.check_for_collision_with_list(bullet, faction.getShips()))
-            if self.selected_list[0] in hit_list:
-                hit_list.remove(self.selected_list[0])
-            if len(hit_list) > 0:
-                bullet.kill()
+# Ignore the ship that made the shot
+            if bullet.origin in hit_list:
+                hit_list.remove(bullet.origin)
+# If we hit anything, remove the bullet and deliver damage
             for entity in hit_list:
                 entity.hp -= bullet.damage
+            if len(hit_list) > 0:
+                bullet.kill()
+
+# Turn Logic
+        if self.active_team.turns == ACTION_CNT:
+            self.turn += 1
+            self.active_team = self.faction_list[self.turn%self.team_cnt]
+            if len(self.selected_list) > 0:
+                self.selected_list.pop()
+            self.active_team.turns = 0
+            print(self.active_team.style)
 
     def on_key_press(self, key, modifiers):
         """
@@ -166,24 +168,25 @@ class Game(arc.Window):
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
+# Shoot
         if button == arc.MOUSE_BUTTON_RIGHT and len(self.selected_list) == 1:
             attacker = self.selected_list[0]
             self.bullet_list.append(attacker.shoot(x, y))
+            self.active_team.turns += 1
+            self.selected_list.pop()
 
+# Move
         if button == arc.MOUSE_BUTTON_LEFT and len(self.selected_list) == 1 and len(arc.get_sprites_at_point((x,y),self.player1_list)) == 0:
             runner = self.selected_list[0]
             runner.setMove((x, y))
+            self.active_team.turns += 1
+            self.selected_list.pop()
 
+# Select
         if button == arc.MOUSE_BUTTON_LEFT:
-                click_list = arc.get_sprites_at_point((x,y),self.player1_list)
+                click_list = arc.get_sprites_at_point((x,y),self.active_team.getShips())
                 if len(click_list) > 0:
-                    if len(self.selected_list) > 0:
-                        self.selected_list.pop()
                     self.selected_list.append(click_list.pop())
-                # elif len(click_list) == 0:
-                #     if len(self.selected_list) > 0:
-                #         self.selected_list.pop()
-
 
 def main():
     """ Main method """
