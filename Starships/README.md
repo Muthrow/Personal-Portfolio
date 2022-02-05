@@ -22,8 +22,6 @@ Space | Highlight All Ships
 
 The purpose of this project was to gain a better understanding of class design in python, as everything in this game and the _arcade_ library is represented by a class object.
 
-{Provide a link to your YouTube demonstration.  It should be a 4-5 minute demo of the game being played and a walkthrough of the code.}
-
 [Software Demo Video](http://youtube.link.goes.here)
 
 ## Development Environment
