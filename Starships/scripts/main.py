@@ -1,16 +1,12 @@
 """ Main Game Logic and Game Runner """
-from ctypes import resize
-from turtle import color, position
 import arcade as arc
-from matplotlib.pyplot import cla, draw
-from sqlalchemy import false
+import random
 from asteroid import Asteroid
 from ship import Ship
 from faction import Faction
-import random
 
 GAME_WIDTH = 700
-SCREEN_WIDTH = 1200
+SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 700
 
 SCREEN_TITLE = "Starships"
@@ -19,9 +15,9 @@ MUSIC = "assets\sounds\music\I know your secret.mp3"
 # MUSIC = "assets\sounds\music\Lord of The Rings (Calm Ambient Mix).mp3"
 # MUSIC = "assets\sounds\music\\17 The Maw.mp3"
 # FACTION = 2
-ASTEROID_COUNT = 50
-SPAWN_BUFFER = 25
-TEAM_COUNT = 2
+ASTEROID_COUNT = 60
+SPAWN_BUFFER = 20
+TEAM_COUNT = 3
 ACTION_CNT = 3
 ASTEROID_SCALE = .2
 
@@ -94,12 +90,11 @@ class Game(arc.Window):
         i = 0
         while i <= ASTEROID_COUNT:
             spawn = (random.randint(SPAWN_BUFFER,GAME_WIDTH-SPAWN_BUFFER),random.randint(SPAWN_BUFFER,GAME_WIDTH-SPAWN_BUFFER))
-            scale = random.normalvariate(.8,.3)
+            scale = random.normalvariate(.9,.5)
             new_asteroid = Asteroid(position=spawn,scale=scale*ASTEROID_SCALE)
             if len(arc.check_for_collision_with_list(new_asteroid, self.ship_list)) == 0:
                 self.asteriod_list.append(new_asteroid)
                 i += 1
-                print(new_asteroid.scale)
             else:
                 print('oops')
 
@@ -160,12 +155,10 @@ class Game(arc.Window):
                 ship.hp -= bump_list[0].bump_damage
                 bump_list[0].hp -= ship.bump_damage
 
-
 # Turn Logic
     # elimiate defeated teams
         if len(self.active_team.getShips()) == 0:
-            self.faction_list.pop(self.turn%self.team_cnt)
-            self.team_cnt -= 1
+            self.active_team.turns = 3
     # go to next team if actions are used up
         if self.active_team.turns == ACTION_CNT:
             self.turn += 1
@@ -200,22 +193,27 @@ class Game(arc.Window):
 # Shoot
         if button == arc.MOUSE_BUTTON_RIGHT and len(self.selected_list) == 1:
             attacker = self.selected_list[0]
-            self.bullet_list.append(attacker.shoot(x, y))
-            self.active_team.turns += 1
-            self.selected_list.pop()
+            if attacker.has_gone == False:
+                self.bullet_list.append(attacker.shoot(x, y))
+                self.active_team.turns += 1
+                self.selected_list.pop()
 
 # Move
         if button == arc.MOUSE_BUTTON_LEFT and len(self.selected_list) == 1 and len(arc.get_sprites_at_point((x,y),self.player1_list)) == 0:
             runner = self.selected_list[0]
-            runner.setMove((x, y))
-            self.active_team.turns += 1
-            self.selected_list.pop()
+            if runner.has_gone == False:
+                runner.setMove((x, y))
+                self.active_team.turns += 1
+                self.selected_list.pop()
 
 # Select
         if button == arc.MOUSE_BUTTON_LEFT:
                 click_list = arc.get_sprites_at_point((x,y),self.active_team.getShips())
                 if len(click_list) > 0:
+                    if len(self.selected_list) > 0:
+                        self.selected_list.pop()
                     self.selected_list.append(click_list.pop())
+
 
 def main():
     """ Main method """

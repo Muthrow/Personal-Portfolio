@@ -1,5 +1,4 @@
 import arcade as arc
-from sqlalchemy import true
 from bullet import Bullet
 import math
 
@@ -40,7 +39,6 @@ class Ship(arc.Sprite):
 
     def setMove(self, destination):
         """ Sets the destination of the ship """
-        self.destination = destination
         dest_x = destination[0]
         dest_y = destination[1]
 
@@ -52,6 +50,8 @@ class Ship(arc.Sprite):
         self.change_y = math.sin(angle) * self.speed
 
         self.angle = math.degrees(angle)
+
+        self.destination = destination
 
         self.has_gone = True
         self.moving = True
@@ -110,7 +110,7 @@ class Capital(Ship):
         self.speed = MOVE_SPEED/2
         self.hp = CAPITAL_HEALTH
         self.laser_file = CAPITAL_LASER
-        self.bump_damage = 5
+        self.bump_damage = 8
         self.range = 500
 
     def shoot(self, target_x, target_y):
