@@ -15,16 +15,15 @@ SCREEN_HEIGHT = 700
 
 SCREEN_TITLE = "Starships"
 TILE_SCALING = .225
-PLAYER_SCALE = .1
-PLAYER_SPRITE = "assets\sprites\Faction2\cruiser.png"
 MUSIC = "assets\sounds\music\I know your secret.mp3"
 # MUSIC = "assets\sounds\music\Lord of The Rings (Calm Ambient Mix).mp3"
 # MUSIC = "assets\sounds\music\\17 The Maw.mp3"
 # FACTION = 2
-ASTEROID_COUNT = 30
-SPAWN_BUFFER = 30
-TEAM_COUNT = 4
+ASTEROID_COUNT = 50
+SPAWN_BUFFER = 25
+TEAM_COUNT = 2
 ACTION_CNT = 3
+ASTEROID_SCALE = .2
 
 class Game(arc.Window):
     """ Main class for the application. """
@@ -38,6 +37,7 @@ class Game(arc.Window):
         self.player2_list = arc.SpriteList()
         self.player3_list = arc.SpriteList()
         self.player4_list = arc.SpriteList()
+        self.ship_list = arc.SpriteList()
         self.bullet_list = arc.SpriteList()
         self.physics_engine = None
         self.space_list = arc.SpriteList()
@@ -64,34 +64,45 @@ class Game(arc.Window):
 
 
 # Setup Teams
-# Team 1 (Gets first turn)
+    # Team 1 (Gets first turn)
         team1 = Faction(1,4)
         self.active_team = team1
         self.player1_list = team1.getShips()
+        self.ship_list.extend(self.player1_list)
         self.faction_list.append(team1)
-# Team 2
+    # Team 2
         team2 = Faction(4,2)
         self.player2_list = team2.getShips()
+        self.ship_list.extend(self.player2_list)
         self.faction_list.append(team2)
-# Team 3
+    # Team 3
         if self.team_cnt >= 3:
             team3 = Faction(2,3)
             self.player3_list = team3.getShips()
+            self.ship_list.extend(self.player3_list)
             self.faction_list.append(team3)
-# Team 4
+    # Team 4
         if self.team_cnt >= 4:
             team4 = Faction(3,1)
             self.player4_list = team4.getShips()
+            self.ship_list.extend(self.player4_list)
             self.faction_list.append(team4)
 
         self.selected_list = arc.SpriteList()
 
 # Setup Asteroids
-        for each in range(ASTEROID_COUNT):
-            spawn = (random.randint(SPAWN_BUFFER,GAME_WIDTH-SPAWN_BUFFER),random.randint(SPAWN_BUFFER,SCREEN_WIDTH-SPAWN_BUFFER))
-            if len(arc.get_sprites_at_point(spawn)) > 0:
-                each -=1
-            self.asteriod_list.append(Asteroid(position=spawn))
+        i = 0
+        while i <= ASTEROID_COUNT:
+            spawn = (random.randint(SPAWN_BUFFER,GAME_WIDTH-SPAWN_BUFFER),random.randint(SPAWN_BUFFER,GAME_WIDTH-SPAWN_BUFFER))
+            scale = random.normalvariate(.8,.3)
+            new_asteroid = Asteroid(position=spawn,scale=scale*ASTEROID_SCALE)
+            if len(arc.check_for_collision_with_list(new_asteroid, self.ship_list)) == 0:
+                self.asteriod_list.append(new_asteroid)
+                i += 1
+                print(new_asteroid.scale)
+            else:
+                print('oops')
+
 
 # Music
         self.music = arc.load_sound(MUSIC)
@@ -126,28 +137,43 @@ class Game(arc.Window):
 # Bullet logic
         self.bullet_list.update()
         for bullet in self.bullet_list:
-# Check for collision with asteroids
+    # Check for collision with asteroids
             hit_list = arc.check_for_collision_with_list(bullet, self.asteriod_list)
-# Check for collision with ALL ships
-            for faction in self.faction_list:
-                hit_list.extend(arc.check_for_collision_with_list(bullet, faction.getShips()))
-# Ignore the ship that made the shot
+    # Check for collision with ALL ships
+            hit_list.extend(arc.check_for_collision_with_list(bullet, self.ship_list))
+    # Ignore the ship that made the shot
             if bullet.origin in hit_list:
                 hit_list.remove(bullet.origin)
-# If we hit anything, remove the bullet and deliver damage
+    # If we hit anything, remove the bullet and deliver damage
             for entity in hit_list:
                 entity.hp -= bullet.damage
             if len(hit_list) > 0:
                 bullet.kill()
 
+# Crash Logic
+        for ship in self.ship_list:
+    # Asteroid crashing
+            bump_list = arc.check_for_collision_with_list(ship, self.asteriod_list)
+    # Ship crashing
+            bump_list.extend(arc.check_for_collision_with_list(ship, self.ship_list))
+            if len(bump_list) > 0:
+                ship.hp -= bump_list[0].bump_damage
+                bump_list[0].hp -= ship.bump_damage
+
+
 # Turn Logic
+    # elimiate defeated teams
+        if len(self.active_team.getShips()) == 0:
+            self.faction_list.pop(self.turn%self.team_cnt)
+            self.team_cnt -= 1
+    # go to next team if actions are used up
         if self.active_team.turns == ACTION_CNT:
             self.turn += 1
             self.active_team = self.faction_list[self.turn%self.team_cnt]
             if len(self.selected_list) > 0:
                 self.selected_list.pop()
-            self.active_team.turns = 0
-            print(self.active_team.style)
+            self.active_team.reset()
+
 
     def on_key_press(self, key, modifiers):
         """
@@ -156,8 +182,11 @@ class Game(arc.Window):
         if key == arc.key.SPACE:
             self.select = True
 
-        if key == arc.key.D:
-            self.selected_list.pop()
+            if len(self.selected_list) > 0:
+                self.selected_list.pop()
+
+        if key == arc.key.S:
+            self.selected_list[0].showStats()
 
     def on_key_release(self, key, modifiers):
         """

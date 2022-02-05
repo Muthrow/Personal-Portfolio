@@ -1,11 +1,12 @@
 import arcade as arc
+from sqlalchemy import true
 from bullet import Bullet
 import math
 
 MOVE_SPEED = 2
 DECELERATION = .6
 FIGHTER_HEALTH = 25
-CAPITAL_HEALTH = 200
+CAPITAL_HEALTH = 100
 CAPITAL_LASER = "assets\sprites\Lasers\Laser Sprites\\11.png"
 FIGHTER_LASER = "assets\sprites\Lasers\Laser Sprites\\06.png"
 PEW = "assets\sounds\sound effects\laser.wav"
@@ -20,8 +21,13 @@ class Ship(arc.Sprite):
         self.destination = self.position
         self.pew = arc.load_sound(PEW)
         self.hp = 20
+        self.bump_damage = 3
         self.faction = faction
         self.move_distance = 100
+        self.range = 300
+        self.has_gone = False
+        self.moving = False
+        self.touching_list = arc.SpriteList()
 
         # self.decel = DECELERATION
 
@@ -30,6 +36,7 @@ class Ship(arc.Sprite):
         if self.collides_with_point(self.destination):
             self.change_x = 0
             self.change_y = 0
+            self.moving = False
 
     def setMove(self, destination):
         """ Sets the destination of the ship """
@@ -46,8 +53,17 @@ class Ship(arc.Sprite):
 
         self.angle = math.degrees(angle)
 
+        self.has_gone = True
+        self.moving = True
+
+        return True
+
+
     def update(self):
-        self.move()
+        if self.moving == True:
+            self.move()
+        # for item in self.touching_list:
+            # pass
         if self.hp <= 0:
             self.kill()
             self.music = arc.load_sound(EXPLOSION_SOUND)
@@ -57,22 +73,28 @@ class Ship(arc.Sprite):
 
     def shoot(self, target_x, target_y):
         """ Fires a shot in the direction of the destination """
-        print('pew pew')
         arc.play_sound(self.pew)
-        laser = Bullet(self.laser_file, origin=self, scale=.1)
-        laser.position = self.position
-        angle_x = target_x - laser.center_x
-        angle_y = target_y - laser.center_y
+        angle_x = target_x - self.center_x
+        angle_y = target_y - self.center_y
         angle = math.atan2(angle_y, angle_x)
+        destination = [self.center_x+self.range * math.cos(angle), self.center_y+self.range * math.sin(angle)]
 
+
+        laser = Bullet(self.laser_file, origin=self, destination=destination, scale=.1)
+        laser.position = self.position
         laser.change_x = math.cos(angle) * laser.speed
         laser.change_y = math.sin(angle) * laser.speed
-
         laser.angle = math.degrees(angle)
+
+
+        self.has_gone = True
+
 
         return laser
 
-
+    def showStats(self):
+        """ Prints our ships stats to the console """
+        print(f'Health: {self.hp}\nPosition: {self.position}\nFaction: {self.faction}')
 
 class Fighter(Ship):
     def __init__(self, faction: int, filename: str, scale: float = 1, image_x: float = 0, image_y: float = 0, image_width: float = 0, image_height: float = 0, center_x: float = 0, center_y: float = 0, repeat_count_x: int = 1, repeat_count_y: int = 1, flipped_horizontally: bool = False, flipped_vertically: bool = False, flipped_diagonally: bool = False, mirrored: bool = None, hit_box_algorithm: str = "Simple", hit_box_detail: float = 4.5):
@@ -80,6 +102,7 @@ class Fighter(Ship):
         self.speed = MOVE_SPEED
         self.hp = FIGHTER_HEALTH
         self.laser_file = FIGHTER_LASER
+        self.bump_damage = 2
 
 class Capital(Ship):
     def __init__(self, faction: int, filename: str, scale: float = 1, image_x: float = 0, image_y: float = 0, image_width: float = 0, image_height: float = 0, center_x: float = 0, center_y: float = 0, repeat_count_x: int = 1, repeat_count_y: int = 1, flipped_horizontally: bool = False, flipped_vertically: bool = False, flipped_diagonally: bool = False, mirrored: bool = None, hit_box_algorithm: str = "Simple", hit_box_detail: float = 4.5):
@@ -87,6 +110,8 @@ class Capital(Ship):
         self.speed = MOVE_SPEED/2
         self.hp = CAPITAL_HEALTH
         self.laser_file = CAPITAL_LASER
+        self.bump_damage = 5
+        self.range = 500
 
     def shoot(self, target_x, target_y):
         laser = super().shoot(target_x, target_y)
