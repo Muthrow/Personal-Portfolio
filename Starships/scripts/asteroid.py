@@ -1,10 +1,9 @@
 import arcade as arc
-from ship import Ship
 
 IMG_FILE = "assets\sprites\\Asteroid\\asteroid-big-0000.png"
-BREAK_SOUND = "assets\sounds\sound effects\Chunky Explosion.mp3"
+BREAK_SOUND = arc.load_sound("assets\sounds\sound effects\Chunky Explosion.mp3")
 
-SCALE = .2
+SCALE = .15
 
 class Asteroid(arc.Sprite):
     """ A class to represent an asteroid """
@@ -19,6 +18,6 @@ class Asteroid(arc.Sprite):
     def update(self):
         if self.hp <= 0:
             self.kill()
-            self.music = arc.load_sound(BREAK_SOUND)
+            self.music = BREAK_SOUND
             self.player = self.music.play()
         return super().update()

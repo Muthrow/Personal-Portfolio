@@ -1,13 +1,12 @@
-from msilib.schema import Class
 import arcade as arc
 # from main import SCREEN_WIDTH
 from ship import Capital, Fighter, Ship
 
 SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 700
-FIGHTER_SCALING = .15
-CAPITAL_SCALING = .25
-SPAWN_GAP = 75
+FIGHTER_SCALING = .1
+CAPITAL_SCALING = .2
+SPAWN_GAP = 50
 
 
 class Faction():
