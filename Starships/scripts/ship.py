@@ -1,6 +1,7 @@
 import arcade as arc
 from bullet import Bullet
 import math
+from arcade import Color
 
 MOVE_SPEED = 2
 DECELERATION = .6
@@ -20,12 +21,12 @@ class Ship(arc.Sprite):
         self.destination = self.position
         self.pew = arc.load_sound(PEW)
         self.hp = 20
-        self.bump_damage = 3
+        self.bump_damage = 10
         self.faction = faction
         self.move_distance = 100
         self.range = 300
         self.has_gone = False
-        self.moving = False
+        self.is_moving = False
         self.touching_list = arc.SpriteList()
 
         # self.decel = DECELERATION
@@ -35,7 +36,7 @@ class Ship(arc.Sprite):
         if self.collides_with_point(self.destination):
             self.change_x = 0
             self.change_y = 0
-            self.moving = False
+            self.is_moving = False
 
     def setMove(self, destination):
         """ Sets the destination of the ship """
@@ -54,16 +55,20 @@ class Ship(arc.Sprite):
         self.destination = destination
 
         self.has_gone = True
-        self.moving = True
+        self.is_moving = True
 
         return True
 
 
     def update(self):
-        if self.moving == True:
+        if self.is_moving == True:
             self.move()
         # for item in self.touching_list:
             # pass
+        if self.has_gone == True and self.is_moving == False:
+            self.alpha = 100
+        else:
+            self.alpha = 255
         if self.hp <= 0:
             self.kill()
             self.music = arc.load_sound(EXPLOSION_SOUND)
@@ -86,9 +91,7 @@ class Ship(arc.Sprite):
         laser.change_y = math.sin(angle) * laser.speed
         laser.angle = math.degrees(angle)
 
-
         self.has_gone = True
-
 
         return laser
 
@@ -96,13 +99,14 @@ class Ship(arc.Sprite):
         """ Prints our ships stats to the console """
         print(f'Health: {self.hp}\nPosition: {self.position}\nFaction: {self.faction}')
 
+
 class Fighter(Ship):
     def __init__(self, faction: int, filename: str, scale: float = 1, image_x: float = 0, image_y: float = 0, image_width: float = 0, image_height: float = 0, center_x: float = 0, center_y: float = 0, repeat_count_x: int = 1, repeat_count_y: int = 1, flipped_horizontally: bool = False, flipped_vertically: bool = False, flipped_diagonally: bool = False, mirrored: bool = None, hit_box_algorithm: str = "Simple", hit_box_detail: float = 4.5):
         super().__init__(faction, filename, scale, image_x, image_y, image_width, image_height, center_x, center_y, repeat_count_x, repeat_count_y, flipped_horizontally, flipped_vertically, flipped_diagonally, mirrored, hit_box_algorithm, hit_box_detail)
         self.speed = MOVE_SPEED
         self.hp = FIGHTER_HEALTH
         self.laser_file = FIGHTER_LASER
-        self.bump_damage = 2
+        self.bump_damage = 10
 
 class Capital(Ship):
     def __init__(self, faction: int, filename: str, scale: float = 1, image_x: float = 0, image_y: float = 0, image_width: float = 0, image_height: float = 0, center_x: float = 0, center_y: float = 0, repeat_count_x: int = 1, repeat_count_y: int = 1, flipped_horizontally: bool = False, flipped_vertically: bool = False, flipped_diagonally: bool = False, mirrored: bool = None, hit_box_algorithm: str = "Simple", hit_box_detail: float = 4.5):

@@ -11,8 +11,8 @@ SCREEN_HEIGHT = 700
 
 SCREEN_TITLE = "Starships"
 TILE_SCALING = .225
-MUSIC = "assets\sounds\music\I know your secret.mp3"
-# MUSIC = "assets\sounds\music\Lord of The Rings (Calm Ambient Mix).mp3"
+# MUSIC = "assets\sounds\music\I know your secret.mp3"
+MUSIC = "assets\sounds\music\Lord of The Rings (Calm Ambient Mix).mp3"
 # MUSIC = "assets\sounds\music\\17 The Maw.mp3"
 # FACTION = 2
 ASTEROID_COUNT = 60
@@ -24,7 +24,7 @@ ASTEROID_SCALE = .2
 class Game(arc.Window):
     """ Main class for the application. """
 
-    def __init__(self, width, height, title, resize):
+    def __init__(self, width, height, title, resize, players):
         super().__init__(width, height, title, resize)
 
 # Initialize lists
@@ -48,7 +48,7 @@ class Game(arc.Window):
         self.player = None
         self.faction_list = list()
         self.turn = 0
-        self.team_cnt = TEAM_COUNT
+        self.team_cnt = players
         self.active_team = None
 
     def setup(self):
@@ -95,13 +95,11 @@ class Game(arc.Window):
             if len(arc.check_for_collision_with_list(new_asteroid, self.ship_list)) == 0:
                 self.asteriod_list.append(new_asteroid)
                 i += 1
-            else:
-                print('oops')
 
 
 # Music
         self.music = arc.load_sound(MUSIC)
-        # self.player = self.music.play()
+        self.player = self.music.play()
 
     def on_draw(self):
         """ Draw Sprites """
@@ -161,20 +159,21 @@ class Game(arc.Window):
             self.active_team.turns = 3
     # go to next team if actions are used up
         if self.active_team.turns == ACTION_CNT:
+            self.active_team.reset()
             self.turn += 1
             self.active_team = self.faction_list[self.turn%self.team_cnt]
             if len(self.selected_list) > 0:
                 self.selected_list.pop()
-            self.active_team.reset()
 
 
     def on_key_press(self, key, modifiers):
         """
         Called whenever a key is pressed.
         """
-        if key == arc.key.SPACE:
+        if key == arc.key.D:
             self.select = True
 
+        if key == arc.key.SPACE:
             if len(self.selected_list) > 0:
                 self.selected_list.pop()
 
@@ -217,7 +216,17 @@ class Game(arc.Window):
 
 def main():
     """ Main method """
-    window = Game(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, False)
+    invalid = True
+    players = 4
+    while invalid:
+        try:
+            # players = int(input('How many players (2-4)'))
+            pass
+        except:
+            print("Invalid player count")
+        if players >= 2 and players <= 4:
+            invalid = False
+    window = Game(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, False, players)
     window.setup()
     arc.run()
 

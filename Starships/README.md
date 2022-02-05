@@ -1,12 +1,26 @@
-# Mettle
+# Starships
 
 ## Overview
 
-{Important!  Do not say in this section that this is college assignment.  Talk about what you are trying to accomplish as a software engineer to further your learning.}
+This is a simple strategy game that can be played with 2 - 4 players. You take control of a small fleet of starships in an asteroid field with the goal of destroying the other fleets in the area. Carefully manuever your ships through the asteroids, using them as cover or even destroying them with your lasers. Use your resources and enviornment wisely and you might just come out on top!
 
-{Provide a description the game that you wrote. Describe how to play your game.}
+Each faction has the same stats and abilities, all with 3 fighter class ships and one Capital ship. All ships can move and fire lasers, but they only do one each turn, becoming greyed out when their action is used. Each team only gets 3 actions on their turn. Crashing your ship into something damages both your ship and the object you hit. You can move your ships as far as you want, but your lasers have a limited range. Once you move your ship, you cannot change course, so plan carefully!
 
-{Describe your purpose for writing this software.}
+> Clever players may use a ship as a battering ram to take out a weaker enemy or a pesky asteroid
+
+Asteroids are randomly scattered throughout the map at the begining of the game and can be destroyed during play by either being shot with a laser or hit by a ship. Each asteroid is a different size, with larger asteroids generally having more health than smaller ones.
+
+### Basic Controls
+
+Button | Action
+-------- | -------
+Left Mouse Click | Select Ship / Move Selected Ship
+Right Mouse Click | Shoot From Selected Ship
+D | Diselect Ship
+S | Print Out Ship Stats to Console
+Space | Highlight All Ships
+
+The purpose of this project was to gain a better understanding of class design in python, as everything in this game and the _arcade_ library is represented by a class object.
 
 {Provide a link to your YouTube demonstration.  It should be a 4-5 minute demo of the game being played and a walkthrough of the code.}
 
@@ -14,21 +28,25 @@
 
 ## Development Environment
 
-{Describe the tools that you used to develop the software}
-
-{Describe the programming language that you used and any libraries.}
+The main tools used for this project are the python language, the python _arcade_ library, and the map creation app Tiled.
 
 ## Useful Websites
 
-{Make a list of websites that you found helpful in this project}
+Sites integral to the success of the project include:
 
-* [Open Game Art](http://opengameart.com)
-* [Web Site Name](http://url.link.goes.here)
+> * [Open Game Art](http://opengameart.com)
+> * [Arcade Package API](https://api.arcade.academy/en/latest/arcade.html)
+> * [Tiled](https://www.mapeditor.org/)
 
 ## Future Work
 
-{Make a list of things that you need to fix, improve, and add in the future.}
-
-* Item 1
-* Item 2
-* Item 3
+* Asteroid Spawn Bug
+* Moving to enemy bug
+* Capital Ship Balance (maneuverability)
+* Laser accuracy
+* Additional Game Modes
+* Improved UI
+* Save game functionality
+* AI enemy
+* Asteroid and laser animation
+* Better asteroids
