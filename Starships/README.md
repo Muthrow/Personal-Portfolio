@@ -18,11 +18,12 @@ Left Mouse Click | Select Ship / Move Selected Ship
 Right Mouse Click | Shoot From Selected Ship
 D | Diselect Ship
 S | Print Out Ship Stats to Console
+T | Skip Turn
 Space | Highlight All Ships
 
 The purpose of this project was to gain a better understanding of class design in python, as everything in this game and the _arcade_ library is represented by a class object.
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Demo Video](https://youtu.be/0MwaX_U8gNk)
 
 ## Development Environment
 

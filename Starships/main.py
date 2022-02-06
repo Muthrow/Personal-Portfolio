@@ -1,4 +1,6 @@
 """ Main Game Logic and Game Runner """
+import os
+import sys
 import arcade as arc
 import random
 from asteroid import Asteroid
@@ -11,8 +13,8 @@ SCREEN_HEIGHT = 700
 
 SCREEN_TITLE = "Starships"
 TILE_SCALING = .225
-# MUSIC = "assets\sounds\music\I know your secret.mp3"
-MUSIC = "assets\sounds\music\Lord of The Rings (Calm Ambient Mix).mp3"
+MUSIC = "assets\sounds\music\I know your secret.mp3"
+# MUSIC = "assets\sounds\music\Lord of The Rings (Calm Ambient Mix).mp3"
 # MUSIC = "assets\sounds\music\\17 The Maw.mp3"
 # FACTION = 2
 ASTEROID_COUNT = 60
@@ -99,7 +101,7 @@ class Game(arc.Window):
 
 # Music
         self.music = arc.load_sound(MUSIC)
-        self.player = self.music.play()
+        # self.player = self.music.play()
 
     def on_draw(self):
         """ Draw Sprites """
@@ -154,11 +156,7 @@ class Game(arc.Window):
                 bump_list[0].hp -= ship.bump_damage
 
 # Turn Logic
-    # elimiate defeated teams
-        if len(self.active_team.getShips()) == 0:
-            self.active_team.turns = 3
-    # go to next team if actions are used up
-        if self.active_team.turns == ACTION_CNT:
+        if self.active_team.has_turns() == False:
             self.active_team.reset()
             self.turn += 1
             self.active_team = self.faction_list[self.turn%self.team_cnt]
@@ -170,15 +168,21 @@ class Game(arc.Window):
         """
         Called whenever a key is pressed.
         """
-        if key == arc.key.D:
+        if key == arc.key.SPACE:
             self.select = True
 
-        if key == arc.key.SPACE:
+        if key == arc.key.D:
             if len(self.selected_list) > 0:
                 self.selected_list.pop()
 
         if key == arc.key.S:
             self.selected_list[0].showStats()
+
+        if key == arc.key.T:
+            self.active_team.endTurn()
+
+        if key == arc.key.P:
+            self.selected_list[0].hp = -1
 
     def on_key_release(self, key, modifiers):
         """
@@ -217,10 +221,10 @@ class Game(arc.Window):
 def main():
     """ Main method """
     invalid = True
-    players = 4
+    # players = 4
     while invalid:
         try:
-            # players = int(input('How many players (2-4)'))
+            players = int(input('How many players (2-4)'))
             pass
         except:
             print("Invalid player count")
@@ -232,4 +236,7 @@ def main():
 
 
 if __name__ == "__main__":
+    # Pyinstaller stuff
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        os.chdir(sys._MEIPASS)
     main()

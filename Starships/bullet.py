@@ -1,5 +1,4 @@
 import arcade
-from matplotlib.pyplot import cla
 
 FIZZLE = 'assets\sprites\Lasers\Laser Sprites\\38.png'
 FIZZLE_DISTANCE = 30

@@ -14,6 +14,7 @@ class Faction():
 
     def __init__(self, style, side):
         self.turns = 0
+        self.turn_limit = 3
         self.ships = arc.SpriteList()
         self.spawns = None
         self.fighter_scale = FIGHTER_SCALING
@@ -82,8 +83,22 @@ class Faction():
     def getShips(self):
         return self.ships
 
+    def getShipCount(self):
+        return len(self.ships)
+
     def reset(self):
         """ Prepares the faction for a new turn """
         self.turns = 0
+        self.turn_limit = min([self.turn_limit, len(self.getShips())])
         for ship in self.ships:
             ship.has_gone = False
+
+    def has_turns(self):
+        if self.turns >= self.turn_limit:
+            return False
+        # if self.turns >= len(self.ships):
+        #     return False
+        return True
+
+    def endTurn(self):
+        self.turns = self.turn_limit
