@@ -6,4 +6,4 @@ def form(request):
     return render(request, 'form.html')
 
 def form_output(request):
-    return render(request, 'form_output.html')
+    return render(request, 'form_output.html', {'name':"form_output"})

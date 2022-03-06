@@ -30,32 +30,32 @@ class Faction():
             flip_x = False
             flip_y = True
             flip_diag = True
-            fighter_sprite = "assets\sprites\Faction1\F5S1.png"
-            capital_sprite = "assets\sprites\Faction1\F5S4.png"
+            fighter_sprite = "assets\\sprites\\Faction1\\F5S1.png"
+            capital_sprite = "assets\\sprites\\Faction1\\F5S4.png"
         elif style == 2:
             self.fighter_scale *= .5
             self.capital_scale *= .65
             flip_x = False
             flip_y = False
             flip_diag = False
-            fighter_sprite = "assets\sprites\Faction2\destroyer.png"
-            capital_sprite = "assets\sprites\Faction2\carrier.png"
+            fighter_sprite = "assets\\sprites\\Faction2\\destroyer.png"
+            capital_sprite = "assets\\sprites\\Faction2\\carrier.png"
         elif style == 3:
             self.fighter_scale *= 1
             self.capital_scale *= 1.35
             flip_x = True
             flip_y = True
             flip_diag = True
-            fighter_sprite = "assets\sprites\Faction3\\alien1.png"
-            capital_sprite = "assets\sprites\Faction3\\alien2.png"
+            fighter_sprite = "assets\\sprites\\Faction3\\alien1.png"
+            capital_sprite = "assets\\sprites\\Faction3\\alien2.png"
         elif style == 4:
             self.fighter_scale *= .8
             self.capital_scale *= 1.2
             flip_x = False
             flip_y = False
             flip_diag = False
-            fighter_sprite = "assets\sprites\Faction4\\bluecruiser.png"
-            capital_sprite = "assets\sprites\Faction4\\blueshuttlenoweps.png"
+            fighter_sprite = "assets\\sprites\\Faction4\\bluecruiser.png"
+            capital_sprite = "assets\\sprites\\Faction4\\blueshuttlenoweps.png"
 
         if side == 1:
             spawn_agg_x = SCREEN_WIDTH/2

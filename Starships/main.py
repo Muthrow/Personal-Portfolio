@@ -1,4 +1,5 @@
 """ Main Game Logic and Game Runner """
+from importlib.resources import path
 import os
 import sys
 import arcade as arc
@@ -7,15 +8,15 @@ from asteroid import Asteroid
 from ship import Ship
 from faction import Faction
 
+path = "C:\code\BYU-I\\2022-Winter\Applied Programming\Personal Portfolio\Personal-Portfolio\Starships"
 GAME_WIDTH = 700
 SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 700
-
 SCREEN_TITLE = "Starships"
 TILE_SCALING = .225
-MUSIC = "assets\sounds\music\I know your secret.mp3"
+# MUSIC = "assets\sounds\music\I know your secret.mp3"
 # MUSIC = "assets\sounds\music\Lord of The Rings (Calm Ambient Mix).mp3"
-# MUSIC = "assets\sounds\music\\17 The Maw.mp3"
+MUSIC = "assets\sounds\music\\17 The Maw.mp3"
 # FACTION = 2
 ASTEROID_COUNT = 60
 SPAWN_BUFFER = 20
@@ -39,7 +40,7 @@ class Game(arc.Window):
         self.bullet_list = arc.SpriteList()
         self.physics_engine = None
         self.space_list = arc.SpriteList()
-        self.basic_map = None
+        # self.basic_map = None
         self.scene = None
         self.background_list = arc.SpriteList()
         self.asteriod_list = arc.SpriteList()
@@ -57,8 +58,9 @@ class Game(arc.Window):
         """ setup sprites and sprite lists """
 # Setup Map
         map_name = "assets\Starship test.tmx"
-        self.basic_map = arc.tilemap.read_tmx(map_name)
-        self.background_list = arc.tilemap.process_layer(self.basic_map,"Background",TILE_SCALING)
+        # self.basic_map = arc.TileMap(map_name)
+        # self.basic_map = arc.tilemap.read_tmx(map_name)
+        # self.background_list = arc.tilemap.process_layer(self.basic_map,"Background",TILE_SCALING)
 
 
 # Setup Teams
@@ -107,7 +109,7 @@ class Game(arc.Window):
         """ Draw Sprites """
 # Clear the board before we draw again
         self.clear()
-        self.background_list.draw()
+        # self.basic_map.draw()
 # call draw on sprite lists
         self.player1_list.draw()
         self.player2_list.draw()
@@ -123,7 +125,7 @@ class Game(arc.Window):
         """ Game Logic. Updated Every Frame """
 
 # call update on sprite lists
-        self.background_list.update()
+        # self.basic_map.update()
         self.player1_list.update()
         self.player2_list.update()
         self.player3_list.update()
