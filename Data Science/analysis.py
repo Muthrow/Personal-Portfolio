@@ -47,7 +47,40 @@ clean_dinos.head()
 # %%
 clean_dinos.groupby(['geo_period']).head()
 # %%
-jp = ['allosaurus','ankylosaurus','apatosaurus','atrociraptor','baryonyx','brachiosaurus','carnotaurus','ceratosaurus','compsognathus','corythosaurus','dilophosaurus','dreadnoughtus','gallimimus','giganotosaurus','iguanodon','lystrosaurus','mamenchisaurus','nasutoceratops','oviraptor','pachycephalosaurus','parasaurolophus','pteranodon','pyroraptor','quetzalcoatlus','sinoceratops','spinosaurus','stegosaurus','stygimoloch','therizinosaurus','triceratops','tyrannosaurus','velociraptor']
+jp = [
+    'allosaurus',
+    'ankylosaurus',
+    'apatosaurus',
+    'atrociraptor',
+    'baryonyx',
+    'brachiosaurus',
+    'carnotaurus',
+    'ceratosaurus',
+    'compsognathus',
+    'corythosaurus',
+    'dilophosaurus',
+    'dreadnoughtus',
+    'gallimimus',
+    'giganotosaurus',
+    'iguanodon',
+    'lystrosaurus',
+    'mamenchisaurus',
+    'nasutoceratops',
+    'oviraptor',
+    'pachycephalosaurus',
+    'parasaurolophus',
+    'pteranodon',
+    'pyroraptor',
+    'quetzalcoatlus',
+    'sinoceratops',
+    'spinosaurus',
+    'stegosaurus',
+    'stygimoloch',
+    'therizinosaurus',
+    'triceratops',
+    'tyrannosaurus',
+    'velociraptor'
+    ]
 pd.Series(jp)
 movies = clean_dinos.query("name in ['allosaurus','ankylosaurus','apatosaurus','atrociraptor','baryonyx','brachiosaurus','carnotaurus','ceratosaurus','compsognathus','corythosaurus','dilophosaurus','dreadnoughtus','gallimimus','giganotosaurus','iguanodon','lystrosaurus','mamenchisaurus','nasutoceratops','oviraptor','pachycephalosaurus','parasaurolophus','pteranodon','pyroraptor','quetzalcoatlus','sinoceratops','spinosaurus','stegosaurus','stygimoloch','therizinosaurus','triceratops','tyrannosaurus','velociraptor']")
 # movies = clean_dinos.assign(
