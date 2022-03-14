@@ -41,6 +41,8 @@ Sites integral to the success of the project include:
 
 * Asteroid Spawn Bug
 * Moving to enemy bug
+* Faction powers/abilities
+* Replace actions with ship power
 * Capital Ship Balance (maneuverability)
 * Laser accuracy
 * Additional Game Modes
