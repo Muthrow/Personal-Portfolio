@@ -13,9 +13,8 @@ PEW = "assets\sounds\sound effects\laser.wav"
 EXPLOSION_SOUND = "assets\sounds\sound effects\\rock_breaking.flac"
 
 class Ship(arc.Sprite):
-    def __init__(self, faction: int, filename: str, scale: float = 1, image_x: float = 0, image_y: float = 0, image_width: float = 0, image_height: float = 0, center_x: float = 0, center_y: float = 0, repeat_count_x: int = 1, repeat_count_y: int = 1, flipped_horizontally: bool = False, flipped_vertically: bool = False, flipped_diagonally: bool = False, mirrored: bool = None, hit_box_algorithm: str = "Simple", hit_box_detail: float = 4.5):
-        print(filename)
-        super().__init__(filename, scale, image_x, image_y, image_width, image_height, center_x, center_y, repeat_count_x, repeat_count_y, flipped_horizontally, flipped_vertically, flipped_diagonally, mirrored, hit_box_algorithm, hit_box_detail)
+    def __init__(self, faction: int, filename: str, scale: float = 1, center_x: float = 0, center_y: float = 0,flipped_horizontally: bool = False, flipped_vertically: bool = False, flipped_diagonally: bool = False):
+        super().__init__(filename, scale, center_x, center_y, flipped_horizontally, flipped_vertically, flipped_diagonally)
         self.speed = None
         self.decel = .4
         self.laser_file = FIGHTER_LASER
@@ -102,17 +101,16 @@ class Ship(arc.Sprite):
 
 
 class Fighter(Ship):
-    def __init__(self, faction: int, filename: str, scale: float = 1, image_x: float = 0, image_y: float = 0, image_width: float = 0, image_height: float = 0, center_x: float = 0, center_y: float = 0, repeat_count_x: int = 1, repeat_count_y: int = 1, flipped_horizontally: bool = False, flipped_vertically: bool = False, flipped_diagonally: bool = False, mirrored: bool = None, hit_box_algorithm: str = "Simple", hit_box_detail: float = 4.5):
-        super().__init__(faction, filename, scale, image_x, image_y, image_width, image_height, center_x, center_y, repeat_count_x, repeat_count_y, flipped_horizontally, flipped_vertically, flipped_diagonally, mirrored, hit_box_algorithm, hit_box_detail)
+    def __init__(self, filename: str, scale, center_x: float = 0, center_y: float = 0,flipped_horizontally: bool = False, flipped_vertically: bool = False, flipped_diagonally: bool = False):
+        super().__init__(filename, scale, center_x, center_y, flipped_horizontally, flipped_vertically, flipped_diagonally)
         self.speed = MOVE_SPEED
         self.hp = FIGHTER_HEALTH
         self.laser_file = FIGHTER_LASER
         self.bump_damage = 10
 
 class Capital(Ship):
-    def __init__(self, faction: int, filename: str, scale: float = 1, image_x: float = 0, image_y: float = 0, image_width: float = 0, image_height: float = 0, center_x: float = 0, center_y: float = 0, repeat_count_x: int = 1, repeat_count_y: int = 1, flipped_horizontally: bool = False, flipped_vertically: bool = False, flipped_diagonally: bool = False, mirrored: bool = None, hit_box_algorithm: str = "Simple", hit_box_detail: float = 4.5):
-        print(filename)
-        super().__init__(faction, filename, scale, image_x, image_y, image_width, image_height, center_x, center_y, repeat_count_x, repeat_count_y, flipped_horizontally, flipped_vertically, flipped_diagonally, mirrored, hit_box_algorithm, hit_box_detail)
+    def __init__(self, filename: str, scale, center_x: float = 0, center_y: float = 0,flipped_horizontally: bool = False, flipped_vertically: bool = False, flipped_diagonally: bool = False):
+        super().__init__(filename, scale, center_x, center_y, flipped_horizontally, flipped_vertically, flipped_diagonally)
         self.speed = MOVE_SPEED/2
         self.hp = CAPITAL_HEALTH
         self.laser_file = CAPITAL_LASER

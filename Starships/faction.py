@@ -1,7 +1,10 @@
+from importlib.resources import path
 import arcade as arc
 # from main import SCREEN_WIDTH
 from ship import Capital, Fighter, Ship
+from os import path
 
+PATH = f"{path.dirname(path.abspath(__file__))}"
 SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 700
 FIGHTER_SCALING = .1

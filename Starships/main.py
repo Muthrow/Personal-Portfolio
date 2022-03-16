@@ -29,7 +29,6 @@ class Game(arc.Window):
 
     def __init__(self, width, height, title, resize, players):
         super().__init__(width, height, title, resize)
-
 # Initialize lists
         self.background_color = arc.color.BLACK
         self.player1_list = arc.SpriteList()
@@ -115,6 +114,7 @@ class Game(arc.Window):
         self.player2_list.draw()
         self.player3_list.draw()
         self.player4_list.draw()
+        self.asteriod_list.draw_hit_boxes(color=arc.color.WHITE)
         self.asteriod_list.draw()
         if self.select == True:
             self.active_team.getShips().draw_hit_boxes(color=arc.color.WHITE)
