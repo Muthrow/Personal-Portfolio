@@ -10,9 +10,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <move.h>
-#using std::vector;
-#using std;
+#include "move.h"
+using namespace std;
 
 class Creature
 {
@@ -27,8 +26,13 @@ class Creature
         vector<Move> moveList;
 
     public:
-        Creature();
-        virtual void display();
-        virtual void showStats();
-
+        Creature(int health, int speed, int attack, int defense, int accuracy);
+        void display();
+        void showStats();
 };
+
+class Dinosaur::Creature
+{
+    public:
+        Dinosaur();
+}
