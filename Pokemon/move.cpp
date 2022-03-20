@@ -9,3 +9,12 @@ void Move::showStats() {
     cout << "Accuracy: " << accuracy << endl;
     cout << "PP: " << pp << endl;
 }
+
+TailSlap::TailSlap() {
+    name = "Tail Slap";
+    attack = 20;
+    accuracy = 90;
+    pp = 10;
+    affect = 0;
+    return;
+};

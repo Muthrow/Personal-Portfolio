@@ -6,7 +6,6 @@
  * Summary:
  *    Represents a basic creature to battle
  ************************************************************************/
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -15,24 +14,28 @@ using namespace std;
 
 class Creature
 {
-    private:
-        /* data */
-        int health;
-        int speed;
-        int attack;
-        int defense;
-        int accuracy;
-        string name;
-        vector<Move> moveList;
+    /* Represents a creature
+    Name, Health, Attack, Speed, Defense, Accuracy, MoveList
+    Creature(^^), display(), showStats()
+    */
+protected:
+    /* data */
+    int health;
+    int speed;
+    int attack;
+    int defense;
+    int accuracy;
+    string name;
+    vector<Move> moveList;
 
-    public:
-        Creature(int health, int speed, int attack, int defense, int accuracy);
-        void display();
-        void showStats();
+public:
+    Creature(int health, int speed, int attack, int defense, int accuracy);
+    void display();
+    void showStats();
 };
 
-class Dinosaur::Creature
+class Dinosaur: public Creature
 {
     public:
         Dinosaur();
-}
+};

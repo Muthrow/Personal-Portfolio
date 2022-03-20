@@ -2,10 +2,28 @@
 //
 
 #include <iostream>
+#include "creature.h"
+#include "move.h"
+using namespace std;
+
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	int c1 = rand() % 4;
+	int c2 = c1;
+	while (c2 != c1) {
+		c2 = rand() % 4;
+	}
+
+	switch (c1)
+	{
+	case 0:
+		Dinosaur player;
+	case 1:
+		
+	default:
+		break;
+	}
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

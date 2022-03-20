@@ -16,18 +16,25 @@ void Creature::showStats() {
 }
 
 void Creature::display() {
-    cout << "1:" << moveList[0].display() << "   2:" << movelist[1].display() << endl;
-    cout << "3:" << moveList[2].display() << "   4:" << movelist[3].display() << endl;
+    cout << "1: ";
+    moveList[0].display();
+    cout << "   2:";
+    moveList[1].display();
+    cout << endl;
+    cout << "3: ";
+    moveList[2].display();
+    cout << "   4:";
+    moveList[3].display();
+    cout << endl;
     return;
 }
 
-void Creature::Creature(int health, int speed, int attack, int defense, int accuracy) {
+Creature::Creature(int health, int speed, int attack, int defense, int accuracy) {
     this->health = health;
     this->speed = speed;
     this->attack = attack;
     this->defense = defense;
     this->accuracy = accuracy;
-
     /* Set Moves */
     return;
-}
+} 
