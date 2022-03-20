@@ -17,7 +17,7 @@ protected:
     int attack;
     int accuracy;
     int pp;
-    int affect;
+    int affect; // which creature stat the move affects
     /*
        Health = 0
        Speed = 1
@@ -27,7 +27,7 @@ protected:
      */
 public:
     Move();
-    void display() { cout << name << " (" << pp << ")"; };
+    void display() /* Displays the move name and number of uses left */ { cout << name << " (" << pp << ")"; };
     void showStats();
 };
 

@@ -6,6 +6,7 @@
 using namespace std;
 
 void Creature::showStats() {
+    /* Display the stats for the creature in a list type format */
     cout << name << endl;
     cout << "Health: " << health << endl;
     cout << "Speed: " << speed << endl;
@@ -16,6 +17,7 @@ void Creature::showStats() {
 }
 
 void Creature::display() {
+    /* Display the menu for the Creature */
     cout << "1: ";
     moveList[0].display();
     cout << "   2:";
@@ -30,6 +32,7 @@ void Creature::display() {
 }
 
 Creature::Creature(int health, int speed, int attack, int defense, int accuracy) {
+    /* Constructor */
     this->health = health;
     this->speed = speed;
     this->attack = attack;
@@ -37,4 +40,4 @@ Creature::Creature(int health, int speed, int attack, int defense, int accuracy)
     this->accuracy = accuracy;
     /* Set Moves */
     return;
-} 
+}

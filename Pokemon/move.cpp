@@ -4,6 +4,7 @@
 using namespace std;
 
 void Move::showStats() {
+    /* Show the stats for the selected action */
     cout << name << endl;
     cout << "Attack: " << attack << endl;
     cout << "Accuracy: " << accuracy << endl;

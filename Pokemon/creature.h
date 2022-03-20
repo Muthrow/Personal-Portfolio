@@ -16,10 +16,9 @@ class Creature
 {
     /* Represents a creature
     Name, Health, Attack, Speed, Defense, Accuracy, MoveList
-    Creature(^^), display(), showStats()
+    Creature(), display(), showStats()
     */
 protected:
-    /* data */
     int health;
     int speed;
     int attack;
